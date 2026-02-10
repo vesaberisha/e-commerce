@@ -6,12 +6,12 @@ import { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
 // Assume we have addToCart function, add later
 
-const { addToCart } = useContext(CartContext);
-const handleAddToCart = () => addToCart(product);
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const { addToCart } = useContext(CartContext);
+
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -23,6 +23,8 @@ const ProductDetails = () => {
 
   const handleAddToCart = () => {
     // Implement later
+    addToCart(product);
+
     alert('Added to cart');
   };
 

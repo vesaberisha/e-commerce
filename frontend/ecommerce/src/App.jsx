@@ -7,6 +7,8 @@ import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
 import Orders from './pages/Orders';
 import ProtectedRoute from './components/ProtectedRoute';
+import Navbar from './components/Navbar';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (

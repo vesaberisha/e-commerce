@@ -8,8 +8,16 @@ const Products = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const data = await getProducts();
-      setProducts(data);
+      try {
+        const data = await getProducts();
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else {
+          console.error("API did not return an array:", data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      }
     };
     fetchProducts();
   }, []);
