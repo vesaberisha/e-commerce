@@ -32,6 +32,7 @@ const ProductDetails = () => {
 
   return (
     <Container>
+      {product.image_url && <img src={product.image_url} alt={product.name} style={{ maxWidth: '100%', maxHeight: '400px', marginBottom: '20px' }} />}
       <h2>{product.name}</h2>
       <p>{product.description}</p>
       <p>${product.price}</p>

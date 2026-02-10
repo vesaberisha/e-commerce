@@ -29,6 +29,7 @@ const Products = () => {
         {products.map((product) => (
           <Col md={4} key={product.id}>
             <Card>
+              <Card.Img variant="top" src={product.image_url} style={{ height: '200px', objectFit: 'cover' }} />
               <Card.Body>
                 <Card.Title>{product.name}</Card.Title>
                 <Card.Text>${product.price}</Card.Text>
