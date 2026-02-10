@@ -2,14 +2,12 @@ import React, { useContext } from 'react';
 import { Navbar as BSNavbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { logout } from '../services/authService';
 
 const Navbar = () => {
-  const { user, setUser } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
     logout();
-    setUser(null);
   };
 
   return (

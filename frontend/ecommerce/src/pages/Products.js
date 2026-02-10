@@ -27,13 +27,13 @@ const Products = () => {
       <h2>Products</h2>
       <Row>
         {products.map((product) => (
-          <Col md={4} key={product.id}>
-            <Card>
-              <Card.Img variant="top" src={product.image_url} style={{ height: '200px', objectFit: 'cover' }} />
-              <Card.Body>
+          <Col md={4} key={product.id} className="mb-4">
+            <Card className="h-100 shadow-sm">
+              <Card.Img variant="top" src={product.image_url} style={{ height: '200px', objectFit: 'contain', padding: '10px' }} />
+              <Card.Body className="d-flex flex-column">
                 <Card.Title>{product.name}</Card.Title>
-                <Card.Text>${product.price}</Card.Text>
-                <Link to={`/product/${product.id}`}>Details</Link>
+                <Card.Text className="text-muted">${product.price}</Card.Text>
+                <Link to={`/product/${product.id}`} className="btn btn-primary mt-auto">Details</Link>
               </Card.Body>
             </Card>
           </Col>

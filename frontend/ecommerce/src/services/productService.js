@@ -12,19 +12,24 @@ const getProduct = async (id) => {
   return response.data;
 };
 
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('accessToken');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 // Admin only
 const createProduct = async (productData) => {
-  const response = await axios.post(API_URL, productData);
+  const response = await axios.post(API_URL, productData, { headers: getAuthHeaders() });
   return response.data;
 };
 
 const updateProduct = async (id, productData) => {
-  const response = await axios.put(API_URL + id, productData);
+  const response = await axios.put(API_URL + id, productData, { headers: getAuthHeaders() });
   return response.data;
 };
 
 const deleteProduct = async (id) => {
-  await axios.delete(API_URL + id);
+  await axios.delete(API_URL + id, { headers: getAuthHeaders() });
 };
 
 export { getProducts, getProduct, createProduct, updateProduct, deleteProduct };

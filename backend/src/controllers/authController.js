@@ -19,10 +19,18 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await findUserByEmail(email);
-    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!user) {
+      console.log(`Login failed: User not found for email ${email}`);
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!isMatch) {
+      console.log(`Login failed: Password mismatch for ${email}`);
+      // console.log(`Input password: ${password}`); // Don't log passwords in prod, but for debug
+      // console.log(`Stored hash: ${user.password}`);
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
 
     const accessToken = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '15m' });
     const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
