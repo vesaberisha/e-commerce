@@ -169,6 +169,10 @@ const AdminDashboard = () => {
                   <Form.Label>Category ID</Form.Label>
                   <Form.Control value={currentItem.category_id || ''} onChange={(e) => setCurrentItem({ ...currentItem, category_id: e.target.value })} />
                 </Form.Group>
+                <Form.Group>
+                  <Form.Label>Image URL</Form.Label>
+                  <Form.Control value={currentItem.image_url || ''} onChange={(e) => setCurrentItem({ ...currentItem, image_url: e.target.value })} />
+                </Form.Group>
               </>
             ) : (
               <Form.Group>
