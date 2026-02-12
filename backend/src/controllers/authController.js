@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { createUser, findUserByEmail } = require('../models/userModel');
+const { createUser, findUserByEmail, findUserById } = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 
 const register = async (req, res) => {
@@ -27,8 +27,6 @@ const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       console.log(`Login failed: Password mismatch for ${email}`);
-      // console.log(`Input password: ${password}`); // Don't log passwords in prod, but for debug
-      // console.log(`Stored hash: ${user.password}`);
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
@@ -53,4 +51,21 @@ const refresh = (req, res) => {
   });
 };
 
-module.exports = { register, login, refresh };
+const getMe = async (req, res) => {
+  try {
+    const user = await findUserById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json({
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+module.exports = { register, login, refresh, getMe };
