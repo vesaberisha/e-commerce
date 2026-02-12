@@ -7,13 +7,12 @@ const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await register({ username, email, password, role });
+      await register({ username, email, password });
       navigate('/login');
     } catch (error) {
       alert('Registration failed. User may already exist.');
@@ -35,13 +34,6 @@ const Register = () => {
         <Form.Group className="mb-3">
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>Role</Form.Label>
-          <Form.Select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </Form.Select>
         </Form.Group>
         <Button variant="primary" type="submit" className="w-100">Register</Button>
       </Form>

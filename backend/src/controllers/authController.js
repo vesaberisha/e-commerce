@@ -3,12 +3,12 @@ const { createUser, findUserByEmail, findUserById } = require('../models/userMod
 const bcrypt = require('bcryptjs');
 
 const register = async (req, res) => {
-  const { username, email, password, role } = req.body;
+  const { username, email, password } = req.body;
   try {
     const existingUser = await findUserByEmail(email);
     if (existingUser) return res.status(400).json({ message: 'User exists' });
 
-    const user = await createUser(username, email, password, role);
+    const user = await createUser(username, email, password, 'user');
     res.status(201).json({ message: 'User created', user: { id: user.id, email: user.email, role: user.role } });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
