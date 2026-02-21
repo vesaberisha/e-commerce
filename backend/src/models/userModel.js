@@ -19,4 +19,30 @@ const findUserById = async (id) => {
   return result.rows[0];
 };
 
-module.exports = { createUser, findUserByEmail, findUserById };
+const updateUserById = async (id, updates) => {
+  const fields = [];
+  const values = [];
+  let index = 1;
+
+  if (updates.username) {
+    fields.push(`username = $${index++}`);
+    values.push(updates.username);
+  }
+  if (updates.email) {
+    fields.push(`email = $${index++}`);
+    values.push(updates.email);
+  }
+  if (updates.role) {
+    fields.push(`role = $${index++}`);
+    values.push(updates.role);
+  }
+
+  if (fields.length === 0) return null;
+
+  values.push(id);
+  const query = `UPDATE users SET ${fields.join(', ')} WHERE id = $${index} RETURNING *`;
+  const result = await pool.query(query, values);
+  return result.rows[0];
+};
+
+module.exports = { createUser, findUserByEmail, findUserById, updateUserById };

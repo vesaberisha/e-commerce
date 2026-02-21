@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Button, Table, Modal, Form } from 'react-boo
 import { getProducts, createProduct, updateProduct, deleteProduct } from '../services/productService';
 import { getCategories, createCategory, updateCategory, deleteCategory } from '../services/categoryService';
 import { getAllOrders, updateOrderStatus } from '../services/orderService';
-import { getAllUsers } from '../services/userService';
+import { getAllUsers, createUser, updateUser } from '../services/userService';
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
@@ -43,6 +43,12 @@ const AdminDashboard = () => {
         await updateCategory(currentItem.id, currentItem);
       } else {
         await createCategory(currentItem);
+      }
+    } else if (modalType === 'user') {
+      if (currentItem.id) {
+        await updateUser(currentItem.id, currentItem);
+      } else {
+        await createUser(currentItem);
       }
     }
     setShowModal(false);
@@ -132,11 +138,17 @@ const AdminDashboard = () => {
       </Table>
 
       <h3>Users</h3>
+      <Button onClick={() => handleShowModal('user')}>Add User</Button>
       <Table striped bordered hover>
-        <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th></tr></thead>
+        <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead>
         <tbody>
           {users.map((u) => (
-            <tr key={u.id}><td>{u.id}</td><td>{u.username}</td><td>{u.email}</td><td>{u.role}</td></tr>
+            <tr key={u.id}>
+              <td>{u.id}</td><td>{u.username}</td><td>{u.email}</td><td>{u.role}</td>
+              <td>
+                <Button onClick={() => handleShowModal('user', u)}>Edit</Button>
+              </td>
+            </tr>
           ))}
         </tbody>
       </Table>
@@ -147,38 +159,66 @@ const AdminDashboard = () => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group>
-              <Form.Label>Name</Form.Label>
-              <Form.Control value={currentItem.name || ''} onChange={(e) => setCurrentItem({ ...currentItem, name: e.target.value })} />
-            </Form.Group>
-            {modalType === 'product' ? (
+            {modalType === 'user' ? (
               <>
                 <Form.Group>
-                  <Form.Label>Description</Form.Label>
-                  <Form.Control value={currentItem.description || ''} onChange={(e) => setCurrentItem({ ...currentItem, description: e.target.value })} />
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control value={currentItem.username || ''} onChange={(e) => setCurrentItem({ ...currentItem, username: e.target.value })} />
                 </Form.Group>
                 <Form.Group>
-                  <Form.Label>Price</Form.Label>
-                  <Form.Control type="number" value={currentItem.price || ''} onChange={(e) => setCurrentItem({ ...currentItem, price: e.target.value })} />
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control type="email" value={currentItem.email || ''} onChange={(e) => setCurrentItem({ ...currentItem, email: e.target.value })} />
                 </Form.Group>
+                {!currentItem.id && (
+                  <Form.Group>
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control type="password" value={currentItem.password || ''} onChange={(e) => setCurrentItem({ ...currentItem, password: e.target.value })} />
+                  </Form.Group>
+                )}
                 <Form.Group>
-                  <Form.Label>Stock</Form.Label>
-                  <Form.Control type="number" value={currentItem.stock || ''} onChange={(e) => setCurrentItem({ ...currentItem, stock: e.target.value })} />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Category ID</Form.Label>
-                  <Form.Control value={currentItem.category_id || ''} onChange={(e) => setCurrentItem({ ...currentItem, category_id: e.target.value })} />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Image URL</Form.Label>
-                  <Form.Control value={currentItem.image_url || ''} onChange={(e) => setCurrentItem({ ...currentItem, image_url: e.target.value })} />
+                  <Form.Label>Role</Form.Label>
+                  <Form.Select value={currentItem.role || 'user'} onChange={(e) => setCurrentItem({ ...currentItem, role: e.target.value })}>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                  </Form.Select>
                 </Form.Group>
               </>
             ) : (
-              <Form.Group>
-                <Form.Label>Description</Form.Label>
-                <Form.Control value={currentItem.description || ''} onChange={(e) => setCurrentItem({ ...currentItem, description: e.target.value })} />
-              </Form.Group>
+              <>
+                <Form.Group>
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control value={currentItem.name || ''} onChange={(e) => setCurrentItem({ ...currentItem, name: e.target.value })} />
+                </Form.Group>
+                {modalType === 'product' ? (
+                  <>
+                    <Form.Group>
+                      <Form.Label>Description</Form.Label>
+                      <Form.Control value={currentItem.description || ''} onChange={(e) => setCurrentItem({ ...currentItem, description: e.target.value })} />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Price</Form.Label>
+                      <Form.Control type="number" value={currentItem.price || ''} onChange={(e) => setCurrentItem({ ...currentItem, price: e.target.value })} />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Stock</Form.Label>
+                      <Form.Control type="number" value={currentItem.stock || ''} onChange={(e) => setCurrentItem({ ...currentItem, stock: e.target.value })} />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Category ID</Form.Label>
+                      <Form.Control value={currentItem.category_id || ''} onChange={(e) => setCurrentItem({ ...currentItem, category_id: e.target.value })} />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Image URL</Form.Label>
+                      <Form.Control value={currentItem.image_url || ''} onChange={(e) => setCurrentItem({ ...currentItem, image_url: e.target.value })} />
+                    </Form.Group>
+                  </>
+                ) : (
+                  <Form.Group>
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control value={currentItem.description || ''} onChange={(e) => setCurrentItem({ ...currentItem, description: e.target.value })} />
+                  </Form.Group>
+                )}
+              </>
             )}
           </Form>
         </Modal.Body>
